@@ -1,0 +1,8 @@
+
+- hosts: localhost
+  become: true
+  tasks:
+    - name: Create a file to show Ansible works
+      copy:
+        dest: /tmp/ansible-pull-success.txt
+        content: "Ansible pull ran successfully!"
