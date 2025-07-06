@@ -1,6 +1,7 @@
 
 - name: Install or upgrade k3s
   hosts: localhost
+  become: true
   roles:
     - role: xanmanning.k3s
       vars: 
