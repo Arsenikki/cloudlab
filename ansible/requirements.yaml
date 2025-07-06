@@ -1,8 +1,8 @@
 ---
 roles:
   - name: xanmanning.k3s
-    version: v3.4.7
+    version: v3.4.4
 
 collections:
   - name: community.general
-    version: 8.5.0
+    version: 11.0.0
