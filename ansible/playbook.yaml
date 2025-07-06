@@ -1,10 +1,8 @@
 
-- hosts: localhost
-  become: true
+- name: Install or upgrade k3s
+  hosts: localhost
   roles:
     - role: xanmanning.k3s
-  tasks:
-    - name: Create a file to show Ansible works
-      copy:
-        dest: /tmp/ansible-pull-success.txt
-        content: "Ansible pull ran successfully!"
+      vars: 
+        k3s_version: "v1.33.2+k3s1"
+        k3s_become: true
