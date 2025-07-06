@@ -1,6 +1,8 @@
 
 - hosts: localhost
   become: true
+  roles:
+    - role: xanmanning.k3s
   tasks:
     - name: Create a file to show Ansible works
       copy:
