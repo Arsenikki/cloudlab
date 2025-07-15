@@ -9,20 +9,20 @@ cd "$(dirname "$0")/.."
 # Ensure latest changes have been pulled
 git pull
 
-# Install necessary packages
+# Install (or upgrade) necessary packages
 sudo apt-get update
 sudo apt-get install -y git pipx
 
 sudo pipx ensurepath
 source ~/.bashrc
 
-# Install Ansible using pipx
+# Install (or upgrade) Ansible using pipx
 pipx install --include-deps ansible
 
-# Install Ansible Galaxy requirements
+# Install (or upgrade) Ansible Galaxy requirements
 ansible-galaxy install -r ./ansible/requirements.yaml
 
-# Install Ansible collections
+# Install (or upgrade) Ansible collections
 ansible-galaxy collection install -r ./ansible/requirements.yaml
 
 # Run the Ansible playbook
