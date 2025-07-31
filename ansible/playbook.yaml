@@ -1,9 +1,33 @@
 
-- name: Install or upgrade k3s
+
+- name: Install or upgrade k3s and deploy ArgoCD
   hosts: localhost
   become: true
   roles:
     - role: xanmanning.k3s
-      vars: 
+      vars:
         k3s_version: "v1.33.2+k3s1"
         k3s_become: true
+  tasks:
+    - name: Confirm k3s is running
+      shell: "kubectl get nodes"
+      register: k3s_nodes
+    - debug:
+        var: k3s_nodes.stdout
+
+    - name: Install ArgoCD
+      ansible.builtin.command: |
+        kubectl create namespace argocd || true
+        kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+
+    - name: Wait for ArgoCD server to be ready
+      ansible.builtin.command: |
+        kubectl wait --for=condition=available --timeout=180s deployment/argocd-server -n argocd
+
+    - name: Create ArgoCD app for this repo (nginx example)
+      ansible.builtin.command: |
+        kubectl apply -n argocd -f /Users/arseni/repos/hobby-projects/cloudlab/argocd/nginx/app.yaml
+
+    - name: Sync ArgoCD app
+      ansible.builtin.command: |
+        kubectl -n argocd wait --for=condition=Synced application/nginx-example --timeout=120s || true
