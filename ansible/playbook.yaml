@@ -9,15 +9,11 @@
         k3s_version: "v1.33.2+k3s1"
         k3s_become: true
   tasks:
-    - name: Confirm k3s is running
-      shell: "kubectl get nodes"
-      register: k3s_nodes
-    - debug:
-        var: k3s_nodes.stdout
+    - name: Create ArgoCD namespace
+      ansible.builtin.command: kubectl create namespace argocd
 
     - name: Install ArgoCD
       ansible.builtin.command: |
-        kubectl create namespace argocd || true
         kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
 
     - name: Wait for ArgoCD server to be ready
