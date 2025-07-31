@@ -11,6 +11,7 @@
   tasks:
     - name: Create ArgoCD namespace
       ansible.builtin.command: kubectl create namespace argocd
+      ignore_errors: true
 
     - name: Install ArgoCD
       ansible.builtin.command: |
@@ -22,7 +23,7 @@
 
     - name: Create ArgoCD app for this repo (nginx example)
       ansible.builtin.command: |
-        kubectl apply -n argocd -f /Users/arseni/repos/hobby-projects/cloudlab/argocd/nginx/app.yaml
+        kubectl apply -n argocd -f /home/ubuntu/cloudlab/argocd/nginx/app.yaml
 
     - name: Sync ArgoCD app
       ansible.builtin.command: |
