@@ -25,6 +25,10 @@
       ansible.builtin.command: |
         kubectl apply -n argocd -f /home/ubuntu/cloudlab/argocd/nginx/app.yaml
 
-    - name: Sync ArgoCD app
+    - name: Wait for nginx-example ArgoCD application to be synced
       ansible.builtin.command: |
-        kubectl -n argocd wait --for=condition=Synced application/nginx-example --timeout=120s || true
+        kubectl get application/nginx-example -n argocd -o=jsonpath='{.status.sync.status}'
+      register: status
+      until: status.stdout == "Synced"
+      retries: 10
+      delay: 3
