@@ -1,0 +1,64 @@
+controllers:
+  main:
+    containers:
+      - name: pangolin
+        image:
+          repository: fosrl/pangolin
+          tag: latest
+        volumeMounts:
+          - name: config
+            mountPath: /app/config
+        healthProbe:
+          httpGet:
+            path: /api/v1/
+            port: 3001
+          initialDelaySeconds: 3
+          periodSeconds: 3
+          failureThreshold: 15
+      - name: gerbil
+        image:
+          repository: fosrl/gerbil
+          tag: latest
+        command:
+          - --reachableAt=http://gerbil:3003
+          - --generateAndSaveKeyTo=/var/config/key
+          - --remoteConfig=http://pangolin:3001/api/v1/gerbil/get-config
+          - --reportBandwidthTo=http://pangolin:3001/api/v1/gerbil/receive-bandwidth
+        volumeMounts:
+          - name: config
+            mountPath: /var/config
+        securityContext:
+          capabilities:
+            add: ["NET_ADMIN", "SYS_MODULE"]
+        ports:
+          - containerPort: 51820
+            protocol: UDP
+          - containerPort: 21820
+            protocol: UDP
+          - containerPort: 443
+            protocol: TCP
+          - containerPort: 80
+            protocol: TCP
+    volumes:
+      - name: config
+        persistentVolumeClaim:
+          claimName: pangolin-config-pvc
+service:
+  main:
+    ports:
+      - name: wireguard
+        port: 51820
+        protocol: UDP
+        targetPort: 51820
+      - name: wireguard-alt
+        port: 21820
+        protocol: UDP
+        targetPort: 21820
+      - name: https
+        port: 443
+        protocol: TCP
+        targetPort: 443
+      - name: http
+        port: 80
+        protocol: TCP
+        targetPort: 80
