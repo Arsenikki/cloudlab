@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cloudnative-pg
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/arsenikki/cloudlab.git
+    path: argocd/cloudnative-pg
+    targetRevision: HEAD
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: cloudnative-pg
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

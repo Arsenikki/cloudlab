@@ -1,0 +1,30 @@
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: postgres
+  namespace: cloudnative-pg
+  labels:
+    app.kubernetes.io/name: postgres-db
+spec:
+  imageName: ghcr.io/cloudnative-pg/postgresql:16.2-10
+  instances: 1
+  bootstrap:
+    initdb:
+      database: immich
+      owner: example
+      secret:
+        name: postgres-immich-creds
+  enableSuperuserAccess: true
+  superuserSecret:
+    name: postgres-admin-creds
+  primaryUpdateStrategy: unsupervised
+  storage:
+    size: 10Gi
+    storageClass: default
+  postgresql:
+    parameters:
+      max_connections: "300"
+      shared_buffers: 512MB
+  monitoring:
+    enablePodMonitor: true
