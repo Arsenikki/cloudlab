@@ -20,6 +20,7 @@ secrets:
     enabled: true
     annotations:
       helm.sh/resource-policy: keep
+      helm.sh/hook: pre-install
     stringData:
       authkey: "replace-me-im-example-auth-key"
 
