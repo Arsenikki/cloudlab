@@ -8,7 +8,7 @@ controllers:
         env:
           TS_AUTHKEY:
             secretKeyRef:
-              name: tailscale-auth-key
+              name: tailscale
               key: authkey
           RELAY_SERVER_PORT: 40000
         securityContext:
@@ -16,7 +16,7 @@ controllers:
             add: ["NET_ADMIN", "SYS_MODULE"]
 
 secrets:
-  tailscale-auth-key:
+  tailscale:
     enabled: true
     annotations:
       helm.sh/resource-policy: keep
