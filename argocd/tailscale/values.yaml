@@ -1,0 +1,23 @@
+controllers:
+  main:
+    containers:
+      tailscale:
+        image:
+          repository: tailscale/tailscale
+          tag: latest
+        env:
+          TS_AUTHKEY: example
+        args:
+          - tailscaled
+          - --relay-server-port=40000
+        securityContext:
+          capabilities:
+            add: ["NET_ADMIN", "SYS_MODULE"]
+
+service:
+  main:
+    ports:
+      tailscale-relay:
+        port: 40000
+        protocol: UDP
+        targetPort: 40000
