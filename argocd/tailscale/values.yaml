@@ -6,11 +6,22 @@ controllers:
           repository: tailscale/tailscale
           tag: latest
         env:
-          TS_AUTHKEY: example
+          TS_AUTHKEY:
+            secretKeyRef:
+              name: tailscale-auth-key
+              key: authkey
           RELAY_SERVER_PORT: 40000
         securityContext:
           capabilities:
             add: ["NET_ADMIN", "SYS_MODULE"]
+
+secrets:
+  tailscale-auth-key:
+    enabled: true
+    annotations:
+      helm.sh/resource-policy: keep
+    stringData:
+      authkey: "replace-me-im-example-auth-key"
 
 service:
   main:
